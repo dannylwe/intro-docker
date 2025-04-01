@@ -31,6 +31,7 @@ func main() {
 
 func ping(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("pong"))
+	slog.Info("response from health check")
 }
 
 func (h *JSONPlaceHolder) getComment() (string, error) {
@@ -58,6 +59,6 @@ func commentHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to get comment", http.StatusInternalServerError)
 		return
 	}
-
+	slog.Info("getting comment from json placeholder")
 	fmt.Fprint(w, comment)
 }
