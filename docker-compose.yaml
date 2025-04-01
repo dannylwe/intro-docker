@@ -2,9 +2,18 @@ version: '3.8'
 
 services:
   app:
+    container_name: app
     build:
       context: .
       dockerfile: Dockerfile
+    image: my-go-app:v1
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
     ports:
       - "9008:9008"
     environment:
@@ -12,6 +21,14 @@ services:
 
   nginx:
     image: nginx:1.27.4-alpine
+    container_name: nginx
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+      update_config:
+          delay: 5s
     ports:
       - "80:80"
     volumes:
